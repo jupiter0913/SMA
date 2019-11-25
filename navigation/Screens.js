@@ -88,13 +88,22 @@ const ComponentsStack = createStackNavigator({
   transitionConfig,
 });
 
-const HomeStack = createStackNavigator({
+const LocationStack = createStackNavigator({
   Location: {
     screen: LocationScreen,
     navigationOptions: ({navigation}) => ({
       header: <Header search tabs title="Location" navigation={navigation} />,
     })
   },
+},
+{
+  cardStyle: { 
+    backgroundColor: '#EEEEEE', //this is the backgroundColor for the app
+  },
+  transitionConfig,
+});
+
+const HomeStack = createStackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: ({navigation}) => ({
@@ -125,7 +134,7 @@ const AppStack = createDrawerNavigator(
       },
     },
     Location: {
-      screen: HomeStack,
+      screen: LocationStack,
       navigationOptions: {
         drawerLabel: ({focused}) => (
           <Drawer focused={focused} screen="Location" title="Location" />
