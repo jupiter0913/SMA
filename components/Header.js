@@ -9,6 +9,17 @@ import materialTheme from '../constants/Theme';
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
+const LoginButton = ({isWhite, style, navigation}) => (
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+    <Icon
+      family="GalioExtra"
+      size={16}
+      name="basket-simple"
+      color={theme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+    />
+  </TouchableOpacity>
+);
+
 const ChatButton = ({isWhite, style, navigation}) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
@@ -56,49 +67,63 @@ class Header extends React.Component {
 
     if (title === 'Title') {
       return [
+        <LoginButton key='login-title' navigation={navigation} isWhite={white} />,
         <ChatButton key='chat-title' navigation={navigation} isWhite={white} />,
         <BasketButton key='basket-title' navigation={navigation} isWhite={white} />
       ]
     }
 
     switch (routeName) {
+      case 'Location':
+        return ([
+          <LoginButton key='login-loacation' navigation={navigation} isWhite={white} />,
+          <Text key='login-user'>Jim</Text>,
+        ]);
       case 'Home':
         return ([
+          <LoginButton key='login-home' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-home' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-home' navigation={navigation} isWhite={white} />
         ]);
       case 'Deals':
         return ([
+          <LoginButton key='login-categories' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-categories' navigation={navigation} />,
           <BasketButton key='basket-categories' navigation={navigation} />
         ]);
       case 'Categories':
         return ([
+          <LoginButton key='login-categories' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-categories' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-categories' navigation={navigation} isWhite={white} />
         ]);
       case 'Category':
         return ([
+          <LoginButton key='login-deals' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-deals' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-deals' navigation={navigation} isWhite={white} />
         ]);
       case 'Profile':
         return ([
+          <LoginButton key='login-profile' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-profile' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-deals' navigation={navigation} isWhite={white} />
         ]);
       case 'Product':
         return ([
+          <LoginButton key='login-product' navigation={navigation} isWhite={white} />,
           <SearchButton key='search-product' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-product' navigation={navigation} isWhite={white} />
         ]);
       case 'Search':
         return ([
+          <LoginButton key='login-search' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-search' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-search' navigation={navigation} isWhite={white} />
         ]);
       case 'Settings':
         return ([
+          <LoginButton key='login-search' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-search' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-search' navigation={navigation} isWhite={white} />
         ]);
@@ -129,13 +154,13 @@ class Header extends React.Component {
         <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'Categories'}</Text>
+            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'fixed'}</Text>
           </Block>
         </Button>
         <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'Best Deals'}</Text>
+            <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'mobile'}</Text>
           </Block>
         </Button>
       </Block>
@@ -147,8 +172,8 @@ class Header extends React.Component {
     if (search || tabs) {
       return (
         <Block center>
-          {search ? this.renderSearch() : null}
           {tabs ? this.renderTabs() : null}
+          {search ? this.renderSearch() : null}
         </Block>
       )
     }

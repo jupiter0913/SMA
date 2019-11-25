@@ -10,8 +10,16 @@ const proScreens = ['Woman', 'Man', 'Kids', 'New Collection', 'Sign In', 'Sign U
 class DrawerItem extends React.Component {
   renderIcon = () => {
     const { title, focused } = this.props;
-
+    
     switch (title) {
+      case 'Location':
+        return (
+          <Icon
+            size={16}
+            name="shop"
+            family="GalioExtra"
+            color={focused ? 'white' : materialTheme.COLORS.MUTED} />
+        );
       case 'Home':
         return (
           <Icon

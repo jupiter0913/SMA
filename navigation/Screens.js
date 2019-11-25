@@ -7,6 +7,7 @@ import { Block, Text, theme } from "galio-framework";
 import ComponentsScreen from '../screens/Components';
 import HomeScreen from '../screens/Home';
 import OnboardingScreen from '../screens/Onboarding';
+import LocationScreen from '../screens/Location';
 import ProfileScreen from '../screens/Profile';
 import ProScreen from '../screens/Pro';
 import SettingsScreen from '../screens/Settings';
@@ -88,6 +89,12 @@ const ComponentsStack = createStackNavigator({
 });
 
 const HomeStack = createStackNavigator({
+  Location: {
+    screen: LocationScreen,
+    navigationOptions: ({navigation}) => ({
+      header: <Header search tabs title="Location" navigation={navigation} />,
+    })
+  },
   Home: {
     screen: HomeScreen,
     navigationOptions: ({navigation}) => ({
@@ -115,6 +122,14 @@ const AppStack = createDrawerNavigator(
       screen: OnboardingScreen,
       navigationOptions: {
         drawerLabel: () => {},
+      },
+    },
+    Location: {
+      screen: HomeStack,
+      navigationOptions: {
+        drawerLabel: ({focused}) => (
+          <Drawer focused={focused} screen="Location" title="Location" />
+        )
       },
     },
     Home: {
