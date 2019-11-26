@@ -1,13 +1,28 @@
 import React from 'react';
-import { StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Dimensions, View, ScrollView } from 'react-native';
 import { Button, Block, Text, Input, theme } from 'galio-framework';
+import MapView from 'react-native-maps';
 
 import { Icon, Product } from '../components';
 
 const { width } = Dimensions.get('screen');
-import products from '../constants/products';
 
-export default class Location extends React.Component {
+class Location extends React.Component {
+  state = {
+    selectedTab: 'fixed',
+  };
+
+  constructor(props) {
+    super(props);
+  };
+
+  setSelectedTab = (value) => {
+    this.setState({ selectedTab: value })
+  }
+  saveData = () => {
+    alert("Your data has saved successfully!");
+  }
+
   renderSearch = () => {
     const { navigation } = this.props;
     const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
@@ -18,26 +33,22 @@ export default class Location extends React.Component {
         color="black"
         style={styles.search}
         iconContent={iconCamera}
-        placeholder="What are you looking for?"
+        placeholder="street address, city, state"
         onFocus={() => navigation.navigate('Pro')}
       />
     )
   }
-  
-  renderTabs = () => {
-    const { navigation } = this.props;
 
+  renderTabs = () => {
     return (
       <Block row style={styles.tabs}>
-        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={[styles.tab, styles.divider, { backgroundColor: this.state.selectedTab == 'fixed' ? '#666666' : '#999999' }]} onPress={() => this.setSelectedTab('fixed')}>
           <Block row middle>
-            <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
             <Text size={16} style={styles.tabTitle}>fixed</Text>
           </Block>
         </Button>
-        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={[styles.tab, { backgroundColor: this.state.selectedTab == 'mobile' ? '#666666' : '#999999' }]} onPress={() => this.setSelectedTab('mobile')}>
           <Block row middle>
-            <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
             <Text size={16} style={styles.tabTitle}>mobile</Text>
           </Block>
         </Button>
@@ -45,79 +56,85 @@ export default class Location extends React.Component {
     )
   }
 
-  renderProducts = () => {
+  renderContents = () => {
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.products}>
-        <Block flex>
-          <Product product={products[0]} horizontal />
-          <Block flex row>
-            <Product product={products[1]} style={{ marginRight: theme.SIZES.BASE }} />
-            <Product product={products[2]} />
-          </Block>
-          <Product product={products[3]} horizontal />
-          <Product product={products[4]} full />
-        </Block>
-      </ScrollView>
+      <MapView style={styles.mapStyle}
+        provider='google'
+        mapType='satellite'
+      >
+      </MapView>
+    )
+  }
+
+  renderSave = () => {
+    return (
+      <Button style={styles.saveButton} onPress={() => this.saveData()}><Text>save</Text></Button>
     )
   }
 
   render() {
     return (
-      <Block flex center style={styles.home}>
-        {this.renderProducts()}
+      <Block flex center style={styles.location}>
+        <Text style={styles.locationType}>Location Type</Text>
+        {this.renderTabs()}
+        {this.renderSearch()}
+        {this.renderContents()}
+        {this.renderSave()}
       </Block>
+
     );
   }
 }
 
+export default Location;
+
+
 const styles = StyleSheet.create({
-  home: {
-    width: width,    
+  location: {
+    width: width,
+  },
+  locationType: {
+    alignSelf: 'flex-start',
+    marginTop: 10,
+    marginLeft: 20,
   },
   search: {
     height: 48,
-    width: width - 32,
+    width: width - 40,
     marginHorizontal: 16,
     borderWidth: 1,
     borderRadius: 3,
   },
-  header: {
-    backgroundColor: theme.COLORS.WHITE,
-    shadowColor: theme.COLORS.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowRadius: 8,
-    shadowOpacity: 0.2,
-    elevation: 4,
-    zIndex: 2,
-  },
   tabs: {
-    marginBottom: 24,
+    marginBottom: 5,
     marginTop: 10,
-    elevation: 4,
   },
   tab: {
-    backgroundColor: theme.COLORS.PRIMARY,
-    width: width * 0.50,
+    backgroundColor: '#666666',
+    width: (width - 40) / 2,
     borderRadius: 0,
     borderWidth: 0,
-    height: 24,
-    elevation: 0,
+    height: 32,
   },
   tabTitle: {
     lineHeight: 19,
-    fontWeight: '300'
+    fontWeight: '300',
+    color: 'white'
   },
   divider: {
     borderRightWidth: 0.3,
     borderRightColor: theme.COLORS.MUTED,
   },
-  products: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE * 2,
+  mapStyle: {
+    // position: 'absolute',
+    bottom: 0,
+    marginTop: 5,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height - 305,
   },
+  saveButton: {
+    position: 'absolute',
+    bottom: 15,
+    backgroundColor: '#666666',
+  }
 });

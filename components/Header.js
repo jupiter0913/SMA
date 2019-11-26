@@ -12,10 +12,10 @@ const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 
 const LoginButton = ({isWhite, style, navigation}) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
-      family="GalioExtra"
+      family="Entypo"
       size={16}
-      name="basket-simple"
-      color={theme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      name="user"
+      color={theme.COLORS[isWhite ? 'WHITE' : 'WHITE']}
     />
   </TouchableOpacity>
 );
@@ -50,7 +50,7 @@ const SearchButton = ({isWhite, style, navigation}) => (
       size={16}
       family="entypo"
       name="magnifying-glass"
-      color={theme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      color={theme.COLORS[isWhite ? 'WHITE' : 'WHITE']}
     />
   </TouchableOpacity>
 );
@@ -77,53 +77,45 @@ class Header extends React.Component {
       case 'Location':
         return ([
           <LoginButton key='login-loacation' navigation={navigation} isWhite={white} />,
-          <Text key='login-user'>Jim</Text>,
+          <Text key='login-user' color='white'>Jim</Text>,
         ]);
       case 'Home':
         return ([
-          <LoginButton key='login-home' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-home' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-home' navigation={navigation} isWhite={white} />
         ]);
       case 'Deals':
         return ([
-          <LoginButton key='login-categories' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-categories' navigation={navigation} />,
           <BasketButton key='basket-categories' navigation={navigation} />
         ]);
       case 'Categories':
         return ([
-          <LoginButton key='login-categories' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-categories' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-categories' navigation={navigation} isWhite={white} />
         ]);
       case 'Category':
         return ([
-          <LoginButton key='login-deals' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-deals' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-deals' navigation={navigation} isWhite={white} />
         ]);
       case 'Profile':
         return ([
-          <LoginButton key='login-profile' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-profile' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-deals' navigation={navigation} isWhite={white} />
         ]);
       case 'Product':
         return ([
-          <LoginButton key='login-product' navigation={navigation} isWhite={white} />,
           <SearchButton key='search-product' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-product' navigation={navigation} isWhite={white} />
         ]);
       case 'Search':
         return ([
-          <LoginButton key='login-search' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-search' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-search' navigation={navigation} isWhite={white} />
         ]);
       case 'Settings':
         return ([
-          <LoginButton key='login-search' navigation={navigation} isWhite={white} />,
           <ChatButton key='chat-search' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-search' navigation={navigation} isWhite={white} />
         ]);
@@ -200,14 +192,14 @@ class Header extends React.Component {
           rightStyle={{ alignItems: 'center' }}
           leftStyle={{ flex: 0.3, paddingTop: 2  }}
           leftIconName="navicon"
-          leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
+          leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.WHITE}
           titleStyle={[
             styles.title,
-            {color: theme.COLORS[white ? 'WHITE' : 'ICON']},
+            {color: theme.COLORS[white ? 'WHITE' : 'WHITE']},
           ]}
           onLeftPress={this.handleLeftPress}
         />
-        {this.renderHeader()}
+        {/* {this.renderHeader()} */}
       </Block>
     );
   }
@@ -226,6 +218,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   navbar: {
+    backgroundColor: '#333333',
     paddingVertical: 0,
     paddingBottom: theme.SIZES.BASE * 1.5,
     paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
@@ -277,6 +270,6 @@ const styles = StyleSheet.create({
   },
   tabTitle: {
     lineHeight: 19,
-    fontWeight: '300'
+    fontWeight: '300',
   },
 })

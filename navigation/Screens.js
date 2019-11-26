@@ -92,7 +92,7 @@ const LocationStack = createStackNavigator({
   Location: {
     screen: LocationScreen,
     navigationOptions: ({navigation}) => ({
-      header: <Header search tabs title="Location" navigation={navigation} />,
+      header: <Header search white title="Location" navigation={navigation} />,
     })
   },
 },
