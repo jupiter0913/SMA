@@ -9,6 +9,17 @@ import materialTheme from '../constants/Theme';
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
+const LoginButton = ({isWhite, style, navigation}) => (
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+    <Icon
+      family="Entypo"
+      size={16}
+      name="user"
+      color={theme.COLORS[isWhite ? 'WHITE' : 'WHITE']}
+    />
+  </TouchableOpacity>
+);
+
 const ChatButton = ({isWhite, style, navigation}) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
@@ -39,7 +50,7 @@ const SearchButton = ({isWhite, style, navigation}) => (
       size={16}
       family="entypo"
       name="magnifying-glass"
-      color={theme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      color={theme.COLORS[isWhite ? 'WHITE' : 'WHITE']}
     />
   </TouchableOpacity>
 );
@@ -56,12 +67,18 @@ class Header extends React.Component {
 
     if (title === 'Title') {
       return [
+        <LoginButton key='login-title' navigation={navigation} isWhite={white} />,
         <ChatButton key='chat-title' navigation={navigation} isWhite={white} />,
         <BasketButton key='basket-title' navigation={navigation} isWhite={white} />
       ]
     }
 
     switch (routeName) {
+      case 'Location':
+        return ([
+          <LoginButton key='login-loacation' navigation={navigation} isWhite={white} />,
+          <Text key='login-user' color='white'>Jim</Text>,
+        ]);
       case 'Home':
         return ([
           <ChatButton key='chat-home' navigation={navigation} isWhite={white} />,
@@ -129,13 +146,13 @@ class Header extends React.Component {
         <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'Categories'}</Text>
+            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'fixed'}</Text>
           </Block>
         </Button>
         <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'Best Deals'}</Text>
+            <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'mobile'}</Text>
           </Block>
         </Button>
       </Block>
@@ -147,8 +164,8 @@ class Header extends React.Component {
     if (search || tabs) {
       return (
         <Block center>
-          {search ? this.renderSearch() : null}
           {tabs ? this.renderTabs() : null}
+          {search ? this.renderSearch() : null}
         </Block>
       )
     }
@@ -175,14 +192,14 @@ class Header extends React.Component {
           rightStyle={{ alignItems: 'center' }}
           leftStyle={{ flex: 0.3, paddingTop: 2  }}
           leftIconName="navicon"
-          leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
+          leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.WHITE}
           titleStyle={[
             styles.title,
-            {color: theme.COLORS[white ? 'WHITE' : 'ICON']},
+            {color: theme.COLORS[white ? 'WHITE' : 'WHITE']},
           ]}
           onLeftPress={this.handleLeftPress}
         />
-        {this.renderHeader()}
+        {/* {this.renderHeader()} */}
       </Block>
     );
   }
@@ -201,6 +218,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   navbar: {
+    backgroundColor: '#333333',
     paddingVertical: 0,
     paddingBottom: theme.SIZES.BASE * 1.5,
     paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
@@ -252,6 +270,6 @@ const styles = StyleSheet.create({
   },
   tabTitle: {
     lineHeight: 19,
-    fontWeight: '300'
+    fontWeight: '300',
   },
 })

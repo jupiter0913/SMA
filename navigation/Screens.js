@@ -7,6 +7,8 @@ import { Block, Text, theme } from "galio-framework";
 import ComponentsScreen from '../screens/Components';
 import HomeScreen from '../screens/Home';
 import OnboardingScreen from '../screens/Onboarding';
+import LocationScreen from '../screens/Location';
+import SearchScreen from '../screens/Search';
 import ProfileScreen from '../screens/Profile';
 import ProScreen from '../screens/Pro';
 import SettingsScreen from '../screens/Settings';
@@ -87,6 +89,21 @@ const ComponentsStack = createStackNavigator({
   transitionConfig,
 });
 
+const LocationStack = createStackNavigator({
+  Location: {
+    screen: LocationScreen,
+    navigationOptions: ({navigation}) => ({
+      header: <Header search white title="Location" navigation={navigation} />,
+    })
+  },
+},
+{
+  cardStyle: { 
+    backgroundColor: '#EEEEEE', //this is the backgroundColor for the app
+  },
+  transitionConfig,
+});
+
 const HomeStack = createStackNavigator({
   Home: {
     screen: HomeScreen,
@@ -115,6 +132,20 @@ const AppStack = createDrawerNavigator(
       screen: OnboardingScreen,
       navigationOptions: {
         drawerLabel: () => {},
+      },
+    },
+    Search: {
+      screen: SearchScreen,
+      navigationOptions: {
+        drawerLabel: () => {},
+      },
+    },
+    Location: {
+      screen: LocationStack,
+      navigationOptions: {
+        drawerLabel: ({focused}) => (
+          <Drawer focused={focused} screen="Location" title="Location" />
+        )
       },
     },
     Home: {
