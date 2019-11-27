@@ -8,6 +8,7 @@ import ComponentsScreen from '../screens/Components';
 import HomeScreen from '../screens/Home';
 import OnboardingScreen from '../screens/Onboarding';
 import LocationScreen from '../screens/Location';
+import SearchScreen from '../screens/Search';
 import ProfileScreen from '../screens/Profile';
 import ProScreen from '../screens/Pro';
 import SettingsScreen from '../screens/Settings';
@@ -129,6 +130,12 @@ const AppStack = createDrawerNavigator(
   {
     Onboarding: {
       screen: OnboardingScreen,
+      navigationOptions: {
+        drawerLabel: () => {},
+      },
+    },
+    Search: {
+      screen: SearchScreen,
       navigationOptions: {
         drawerLabel: () => {},
       },

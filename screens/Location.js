@@ -34,7 +34,7 @@ class Location extends React.Component {
         style={styles.search}
         iconContent={iconCamera}
         placeholder="street address, city, state"
-        onFocus={() => navigation.navigate('Pro')}
+        onFocus={() => navigation.navigate('Search')}
       />
     )
   }
@@ -74,7 +74,7 @@ class Location extends React.Component {
 
   render() {
     return (
-      <Block flex center style={styles.location}>
+      <Block flex center style={styles.container}>
         <Text style={styles.locationType}>Location Type</Text>
         {this.renderTabs()}
         {this.renderSearch()}
@@ -90,11 +90,12 @@ export default Location;
 
 
 const styles = StyleSheet.create({
-  location: {
+  container: {
     width: width,
   },
   locationType: {
     alignSelf: 'flex-start',
+    fontSize: 10,
     marginTop: 10,
     marginLeft: 20,
   },
