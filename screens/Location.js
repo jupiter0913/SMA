@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Dimensions, View, ScrollView } from 'react-native';
+import { TouchableOpacity, FlatList, StyleSheet, Dimensions, View, ScrollView } from 'react-native';
 import { Button, Block, Text, Input, theme } from 'galio-framework';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 import { Icon, Product } from '../components';
 
@@ -9,34 +9,33 @@ const { width } = Dimensions.get('screen');
 
 class Location extends React.Component {
   state = {
-    selectedTab: 'fixed',
+    selectedTab: 'fixed', // value is 'fixed' or 'mobile'.
+    index: 0,
   };
 
   constructor(props) {
     super(props);
   };
 
+  searchInputItems = [];
+
   setSelectedTab = (value) => {
     this.setState({ selectedTab: value })
   }
-  saveData = () => {
-    alert("Your data has saved successfully!");
+
+  addInputText = () => {
+    var num = this.state.index;
+    let newSearchInputItem = {
+      property: num,
+    }
+    num++;
+    this.setState({ index: num });
+    this.searchInputItems.push(newSearchInputItem);
+
   }
 
-  renderSearch = () => {
-    const { navigation } = this.props;
-    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
-
-    return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        iconContent={iconCamera}
-        placeholder="street address, city, state"
-        onFocus={() => navigation.navigate('Search')}
-      />
-    )
+  saveData = () => {
+    alert("Your data has saved successfully!");
   }
 
   renderTabs = () => {
@@ -56,7 +55,88 @@ class Location extends React.Component {
     )
   }
 
-  renderContents = () => {
+  renderFixed = () => {
+    const { navigation } = this.props;
+    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
+
+    return (
+      <Block>
+        <Input
+          right
+          color="black"
+          style={styles.search}
+          iconContent={iconCamera}
+          placeholder="street address, city, state"
+          onFocus={() => navigation.navigate('Search')}
+        />
+        {/* <MapView style={styles.mapStyle}
+          provider='google'
+          mapType='satellite'
+        >
+        </MapView> */}
+        <MapView
+          style={styles.mapStyle}
+          showsUserLocation={false}
+          zoomEnabled={true}
+          zoomControlEnabled={true}
+          mapType='satellite'
+          initialRegion={{
+            latitude: 34.0522,
+            longitude: 118.2437,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}>
+
+          <Marker
+            coordinate={{ latitude: 34.0522, longitude: 118.2437 }}
+            title={"Los Angeles"}
+            description={"This is my address"}
+          />
+        </MapView>
+      </Block>
+    )
+  }
+
+  renderMobile = () => {
+    const { navigation } = this.props;
+    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
+
+    return (
+      <Block>
+        {this.searchInputItems.map((key) => {
+          return (
+            <Input
+              right
+              color="black"
+              style={styles.search}
+              iconContent={iconCamera}
+              key={key.property}
+              placeholder="street address, city, state"
+              onFocus={() => navigation.navigate('Search')}
+            />
+          );
+        })}
+      </Block>
+    )
+  }
+
+  renderMobileSearch = () => {
+    const { navigation } = this.props;
+    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
+
+    return (
+      <Input
+        right
+        color="black"
+        style={styles.search}
+        iconContent={iconCamera}
+        placeholder="street address, city, state"
+        onFocus={() => navigation.navigate('Search')}
+      />
+    )
+  }
+
+  renderMobileContents = () => {
     return (
       <MapView style={styles.mapStyle}
         provider='google'
@@ -77,8 +157,15 @@ class Location extends React.Component {
       <Block flex center style={styles.container}>
         <Text style={styles.locationType}>Location Type</Text>
         {this.renderTabs()}
-        {this.renderSearch()}
-        {this.renderContents()}
+        {this.state.selectedTab == 'fixed' ? this.renderFixed() : this.renderMobile()}
+        {this.state.selectedTab == 'fixed' ?
+          <Block />
+          :
+          <TouchableOpacity style={styles.addButton} onPress={() => this.addInputText()}>
+            <Icon size={50} name="plus" family="AntDesign" style={{ color: 'white' }} />
+          </TouchableOpacity>
+        }
+
         {this.renderSave()}
       </Block>
 
@@ -87,7 +174,6 @@ class Location extends React.Component {
 }
 
 export default Location;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +213,6 @@ const styles = StyleSheet.create({
     borderRightColor: theme.COLORS.MUTED,
   },
   mapStyle: {
-    // position: 'absolute',
     bottom: 0,
     marginTop: 5,
     width: Dimensions.get('window').width,
@@ -137,5 +222,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     backgroundColor: '#666666',
-  }
+  },
+  addButton: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    bottom: 75,
+    right: 20,
+    backgroundColor: '#333333',
+  },
 });
