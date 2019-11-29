@@ -1,7 +1,12 @@
 import React from 'react';
 import { TouchableOpacity, FlatList, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme, Input } from 'galio-framework';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
+const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
+const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
+
 import Icon from '../components/Icon';
 import { materialTheme } from '../constants';
 
@@ -13,41 +18,20 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAddress: '',
-      searchAddress: '',
+      selectedAddressData: '',
+      selectedAddressDetail: '',
     };
   };
 
-  onChangeAddressText = (text) => {
-    this.setState({ selectedAddress: '', searchAddress: text });
-  };
-
-  setSelectedAddress = (value) => {
+  setselectedAddressData = (data, details) => {
     this.setState({
-      selectedAddress: value,
-      searchAddress: value,
+      selectedAddressData: data,
+      selectedAddressDetail: details,
     })
   };
 
-  renderItem = ({ item }) => {
-    return (
-      <Block flex>
-        <TouchableOpacity onPress={() => this.setSelectedAddress(item.title)}>
-          <Block row style={{ paddingTop: 7 }}>
-            <Icon name="marker" family="Foundation" style={styles.searchText} />
-            <Text size={14} style={styles.searchText}>{item.title}</Text>
-          </Block>
-        </TouchableOpacity>
-      </Block>
-    );
-  }
-
   render() {
     const { navigation } = this.props;
-    const payment = [
-      { title: "Manage Payment Options", id: "payment" },
-      { title: "Manage Gift Cards", id: "gift" },
-    ];
 
     return (
       <Block flex center style={styles.container}>
@@ -55,26 +39,89 @@ export default class Search extends React.Component {
         <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('Location')}>
           <Icon size={32} name="arrow-long-left" family="Entypo" style={{ color: 'white' }} />
         </TouchableOpacity>
-        <Input
-          right
-          color="black"
-          style={styles.search}
-          placeholder="street address, city, state"
-          value={this.state.searchAddress}
-          onChangeText={(text) => this.onChangeAddressText(text)}
+        <GooglePlacesAutocomplete
+          placeholder='street address, city, state'
+          minLength={2} // minimum length of text to search
+          autoFocus={true}
+          returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+          keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+          listViewDisplayed='false'    // true/false/undefined
+          fetchDetails={true}
+          renderDescription={row => row.description} // custom description render
+          onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+            console.log(data, details);
+            this.setselectedAddressData(data, details);
+          }}
+      
+          getDefaultValue={() => ''}
+
+          query={{
+            // available options: https://developers.google.com/places/web-service/autocomplete
+            key: 'AIzaSyBIr-qC1OKhBK0SMELrKImcXNQjxXqHgZI',
+            language: 'en', // language of the results
+            types: '(cities)' // default: 'geocode'
+          }}
+
+          styles={{
+            textInputContainer: {
+              width: '100%'
+            },
+            description: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+            predefinedPlacesDescription: {
+              color: '#1faadb'
+            },
+          }}
+
+          currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+          currentLocationLabel="Current location"
+          nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+          GoogleReverseGeocodingQuery={{
+            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+          }}
+          GooglePlacesSearchQuery={{
+            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+            rankby: 'distance',
+            type: 'cafe'
+          }}
+
+          GooglePlacesDetailsQuery={{
+            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+            fields: 'formatted_address',
+          }}
+
+          filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+          predefinedPlaces={[homePlace, workPlace]}
+
+          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+          // renderLeftButton={() => <Icon size={16} name="arrow-long-left" family="Entypo" style={{ color: 'white' }} />}
+          // renderRightButton={() => <Text>Search</Text>}
         />
-        {this.state.selectedAddress ?
-          <MapView style={styles.mapStyle}
-            provider='google'
-            mapType='satellite'
-          >
-          </MapView> :
-          <FlatList
-            data={payment}
-            keyExtractor={(item, index) => item.id}
-            style={{ alignSelf: 'flex-start' }}
-            renderItem={this.renderItem}
-          />
+        {this.state.selectedAddressData ?
+          <MapView
+            style={styles.mapStyle}
+            showsUserLocation={false}
+            zoomEnabled={true}
+            zoomControlEnabled={true}
+            toolbarEnabled = {true}
+            // mapType='satellite'
+            initialRegion={{
+              latitude: this.state.selectedAddressDetail.geometry.location.lat,
+              longitude: this.state.selectedAddressDetail.geometry.location.lng,
+              latitudeDelta: 0,
+              longitudeDelta: 0,
+            }}>
+
+            <Marker
+              coordinate={{ latitude: this.state.selectedAddressDetail.geometry.location.lat, longitude: this.state.selectedAddressDetail.geometry.location.lng }}
+              title={this.state.selectedAddressData.description}
+              description={"This is my address"}
+            />
+          </MapView>
+          :
+          <Block/>
         }
         <Button
           shadowless
