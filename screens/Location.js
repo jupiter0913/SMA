@@ -59,15 +59,13 @@ class Location extends React.Component {
 
   renderFixed = () => {
     const { navigation } = this.props;
-    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
-
+  
     return (
       <Block>
         <Input
           right
           color="black"
           style={styles.search}
-          iconContent={iconCamera}
           placeholder="street address, city, state"
           onFocus={() => navigation.navigate('Search')}
         />
@@ -90,15 +88,13 @@ class Location extends React.Component {
             description={"This is my address"}
           />
         </MapView>
-        
       </Block>
     )
   }
 
   renderMobile = () => {
     const { navigation } = this.props;
-    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
-
+   
     return (
       <Block>
         {this.searchInputItems.map((key) => {
@@ -107,7 +103,6 @@ class Location extends React.Component {
               right
               color="black"
               style={styles.search}
-              iconContent={iconCamera}
               key={key.property}
               placeholder="street address, city, state"
               onFocus={() => navigation.navigate('Search')}
@@ -120,14 +115,12 @@ class Location extends React.Component {
 
   renderMobileSearch = () => {
     const { navigation } = this.props;
-    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
-
+   
     return (
       <Input
         right
         color="black"
         style={styles.search}
-        iconContent={iconCamera}
         placeholder="street address, city, state"
         onFocus={() => navigation.navigate('Search')}
       />
@@ -186,7 +179,7 @@ const styles = StyleSheet.create({
   search: {
     height: 48,
     width: width - 40,
-    marginHorizontal: 16,
+    marginHorizontal: 20,
     borderWidth: 1,
     borderRadius: 3,
   },
