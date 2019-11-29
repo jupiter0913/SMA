@@ -6,6 +6,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { Icon, Product } from '../components';
 
 const { width } = Dimensions.get('screen');
+const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
+const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
 
 class Location extends React.Component {
   state = {
@@ -69,30 +71,26 @@ class Location extends React.Component {
           placeholder="street address, city, state"
           onFocus={() => navigation.navigate('Search')}
         />
-        {/* <MapView style={styles.mapStyle}
-          provider='google'
-          mapType='satellite'
-        >
-        </MapView> */}
         <MapView
           style={styles.mapStyle}
           showsUserLocation={false}
           zoomEnabled={true}
           zoomControlEnabled={true}
-          mapType='satellite'
+          // mapType='satellite'
           initialRegion={{
-            latitude: 34.0522,
-            longitude: 118.2437,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitude: 34.0522342,
+            longitude: -118.2436849,
+            latitudeDelta: 0,
+            longitudeDelta: 0,
           }}>
 
           <Marker
-            coordinate={{ latitude: 34.0522, longitude: 118.2437 }}
+            coordinate={{ latitude: 34.0522342, longitude: -118.2436849 }}
             title={"Los Angeles"}
             description={"This is my address"}
           />
         </MapView>
+        
       </Block>
     )
   }
