@@ -107,12 +107,13 @@ export default class Search extends React.Component {
             zoomControlEnabled={true}
             toolbarEnabled = {true}
             // mapType='satellite'
-            initialRegion={{
+            region={{
               latitude: this.state.selectedAddressDetail.geometry.location.lat,
               longitude: this.state.selectedAddressDetail.geometry.location.lng,
               latitudeDelta: 0,
               longitudeDelta: 0,
-            }}>
+            }}
+          >
 
             <Marker
               coordinate={{ latitude: this.state.selectedAddressDetail.geometry.location.lat, longitude: this.state.selectedAddressDetail.geometry.location.lng }}
@@ -151,17 +152,6 @@ const styles = StyleSheet.create({
   },
   backIconStyle: {
     color: 'white'
-  },
-  search: {
-    height: 48,
-    width: width - 40,
-    marginHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 3,
-  },
-  searchText: {
-    color: theme.COLORS.WHITE,
-    paddingLeft: 20,
   },
   mapStyle: {
     marginTop: 10,
