@@ -37,7 +37,7 @@ export default class Search extends React.Component {
       <Block flex center style={styles.container}>
         <StatusBar barStyle="light-content" />
         <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('Location')}>
-          <Icon size={32} name="arrow-long-left" family="Entypo" style={{ color: 'white' }} />
+          <Icon size={16} name="arrowleft" family="AntDesign" style={styles.backIconStyle} />
         </TouchableOpacity>
         <GooglePlacesAutocomplete
           placeholder='street address, city, state'
@@ -143,9 +143,14 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     alignSelf: 'flex-start',
-    width: 32,
-    height: 32,
-    marginLeft: 20,
+    width: 16,
+    height: 16,
+    marginLeft: 17,
+    marginTop: 25,
+    marginBottom: 15,
+  },
+  backIconStyle: {
+    color: 'white'
   },
   search: {
     height: 48,
