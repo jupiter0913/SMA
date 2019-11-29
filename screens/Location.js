@@ -12,14 +12,14 @@ const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818
 class Location extends React.Component {
   state = {
     selectedTab: 'fixed', // value is 'fixed' or 'mobile'.
-    index: 0,
+    index: 1,
   };
 
   constructor(props) {
     super(props);
   };
 
-  searchInputItems = [];
+  searchInputItems = [{ property: 0}];
 
   setSelectedTab = (value) => {
     this.setState({ selectedTab: value })
@@ -96,7 +96,7 @@ class Location extends React.Component {
     const { navigation } = this.props;
    
     return (
-      <Block>
+      <ScrollView>
         {this.searchInputItems.map((key) => {
           return (
             <Input
@@ -109,7 +109,7 @@ class Location extends React.Component {
             />
           );
         })}
-      </Block>
+      </ScrollView>
     )
   }
 
