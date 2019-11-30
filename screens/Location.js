@@ -42,7 +42,7 @@ class Location extends React.Component {
           fixedAddressLongitude: await AsyncStorage.getItem('fixedAddressLongitude'),
         })
       }
-    }, 1000)
+    }, 100)
   }
 
   searchInputItems = [{ property: 0}];
@@ -97,7 +97,7 @@ class Location extends React.Component {
           style={styles.search}
           placeholder="street address, city, state"
           onFocus={() => navigation.navigate('Search')}
-          value={this.props.navigation.state.params?navigation.getParam('fixedAddressName'):this.state.fixedAddressName}
+          value={this.state.fixedAddressName}
         />
         <MapView
           style={styles.mapStyle}
