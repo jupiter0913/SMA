@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, FlatList, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
+import { AsyncStorage, TouchableOpacity, FlatList, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
 import { Block, Button, Text, theme, Input } from 'galio-framework';
 import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -49,7 +49,6 @@ export default class Search extends React.Component {
           fetchDetails={true}
           renderDescription={row => row.description} // custom description render
           onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-            console.log(data, details);
             this.setselectedAddressData(data, details);
           }}
       
@@ -106,7 +105,7 @@ export default class Search extends React.Component {
             zoomEnabled={true}
             zoomControlEnabled={true}
             toolbarEnabled = {true}
-            // mapType='satellite'
+            mapType='satellite'
             region={{
               latitude: this.state.selectedAddressDetail.geometry.location.lat,
               longitude: this.state.selectedAddressDetail.geometry.location.lng,
@@ -128,7 +127,7 @@ export default class Search extends React.Component {
           shadowless
           style={styles.selectButton}
           color={materialTheme.COLORS.BUTTON_COLOR}
-          onPress={() => navigation.navigate('Location')}>
+          onPress={() => navigation.navigate('Location', {fixedAddressName: this.state.selectedAddressData.description, fixedAddressLatitude: this.state.selectedAddressDetail.geometry.location.lat, fixedAddressLongitude: this.state.selectedAddressDetail.geometry.location.lng})}>
           SELECT
         </Button>
       </Block>
