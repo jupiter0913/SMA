@@ -105,7 +105,7 @@ export default class Search extends React.Component {
             zoomEnabled={true}
             zoomControlEnabled={true}
             toolbarEnabled = {true}
-            mapType='satellite'
+            // mapType='satellite'
             region={{
               latitude: this.state.selectedAddressDetail.geometry.location.lat,
               longitude: this.state.selectedAddressDetail.geometry.location.lng,

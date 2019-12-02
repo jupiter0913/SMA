@@ -16,6 +16,7 @@ class Location extends React.Component {
     fixedAddressName: 'Los Angeles, CA, USA',
     fixedAddressLatitude: 34.0522342,
     fixedAddressLongitude: -118.2436849,
+    mobileAddressData: {}
   };
   
   constructor(props) {
@@ -34,14 +35,19 @@ class Location extends React.Component {
   
   componentDidMount() {
     setTimeout(async () => {
-      var addressName = await AsyncStorage.getItem('fixedAddressName');
-      if(addressName) {
+      // fixed method
+      var fixedAddressName = await AsyncStorage.getItem('fixedAddressName');
+      if(fixedAddressName) {
         this.setState({
           fixedAddressName: await AsyncStorage.getItem('fixedAddressName'),
           fixedAddressLatitude: await AsyncStorage.getItem('fixedAddressLatitude'),
           fixedAddressLongitude: await AsyncStorage.getItem('fixedAddressLongitude'),
         })
       }
+      // mobile method
+      this.setState({
+        mobileAddressData: await AsyncStorage.getItem('mobileAddressData')
+      })
     }, 100)
   }
 
@@ -104,7 +110,7 @@ class Location extends React.Component {
           showsUserLocation={false}
           zoomEnabled={true}
           zoomControlEnabled={true}
-          mapType='satellite'
+          // mapType='satellite'
           region={{
             latitude: parseFloat(this.state.fixedAddressLatitude),
             longitude: parseFloat(this.state.fixedAddressLongitude),
