@@ -18,6 +18,7 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      viewMap: true,
       selectedAddressData: '',
       selectedAddressDetail: '',
     };
@@ -25,6 +26,7 @@ export default class Search extends React.Component {
 
   setselectedAddressData = (data, details) => {
     this.setState({
+      viewMap: true,
       selectedAddressData: data,
       selectedAddressDetail: details,
     })
@@ -74,8 +76,8 @@ export default class Search extends React.Component {
             },
           }}
 
-          currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-          currentLocationLabel="Current location"
+          // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+          // currentLocationLabel="Current location"
           nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
           GoogleReverseGeocodingQuery={{
             // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
@@ -92,20 +94,21 @@ export default class Search extends React.Component {
           }}
 
           filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-          predefinedPlaces={[homePlace, workPlace]}
+          // predefinedPlaces={[homePlace, workPlace]}
+          textInputProps={{ onFocus: () => this.setState({viewMap: false}) }}
 
           debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
           // renderLeftButton={() => <Icon size={16} name="arrow-long-left" family="Entypo" style={{ color: 'white' }} />}
           // renderRightButton={() => <Text>Search</Text>}
         />
-        {this.state.selectedAddressData ?
+        {this.state.selectedAddressData && this.state.viewMap == true ?
           <MapView
             style={styles.mapStyle}
             showsUserLocation={false}
             zoomEnabled={true}
             zoomControlEnabled={true}
             toolbarEnabled = {true}
-            // mapType='satellite'
+            mapType='satellite'
             region={{
               latitude: this.state.selectedAddressDetail.geometry.location.lat,
               longitude: this.state.selectedAddressDetail.geometry.location.lng,
@@ -153,8 +156,8 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   mapStyle: {
-    marginTop: 10,
-    marginBottom: 10,
+    // marginTop: 10,
+    marginBottom: 70,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height - 210,
   },

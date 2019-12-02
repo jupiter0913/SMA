@@ -110,7 +110,7 @@ class Location extends React.Component {
           showsUserLocation={false}
           zoomEnabled={true}
           zoomControlEnabled={true}
-          // mapType='satellite'
+          mapType='satellite'
           region={{
             latitude: parseFloat(this.state.fixedAddressLatitude),
             longitude: parseFloat(this.state.fixedAddressLongitude),
