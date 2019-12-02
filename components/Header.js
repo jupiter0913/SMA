@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   navbar: {
+    width: width,
     backgroundColor: '#333333',
     paddingVertical: 0,
     paddingBottom: theme.SIZES.BASE * 1.5,

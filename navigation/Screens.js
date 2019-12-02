@@ -45,21 +45,6 @@ const transitionConfig = (transitionProps, prevTransitionProps) => ({
   }
 })
 
-const LocationStack = createStackNavigator({
-  Location: {
-    screen: LocationScreen,
-    navigationOptions: ({navigation}) => ({
-      header: <Header search white title="Location" navigation={navigation} />,
-    })
-  },
-},
-{
-  cardStyle: { 
-    backgroundColor: '#EEEEEE',
-  },
-  transitionConfig,
-});
-
 const AppStack = createDrawerNavigator(
   {
     Onboarding: {
@@ -69,7 +54,7 @@ const AppStack = createDrawerNavigator(
       },
     },
     Location: {
-      screen: LocationStack,
+      screen: LocationScreen,
       navigationOptions: {
         drawerLabel: ({focused}) => (
           <Drawer focused={focused} screen="Location" title="Location" />
