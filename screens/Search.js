@@ -21,6 +21,7 @@ export default class Search extends React.Component {
       viewMap: true,
       selectedAddressData: '',
       selectedAddressDetail: '',
+      selectedIndex: -1,
     };
   };
 
@@ -30,6 +31,13 @@ export default class Search extends React.Component {
       selectedAddressData: data,
       selectedAddressDetail: details,
     })
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      selectedIndex: nextProps.navigation.getParam('selectedIndex'),
+    })
+    this.setState(nextProps);
   };
 
   render() {
@@ -130,7 +138,7 @@ export default class Search extends React.Component {
           shadowless
           style={styles.selectButton}
           color={materialTheme.COLORS.BUTTON_COLOR}
-          onPress={() => navigation.navigate('Location', {fixedAddressName: this.state.selectedAddressData.description, fixedAddressLatitude: this.state.selectedAddressDetail.geometry.location.lat, fixedAddressLongitude: this.state.selectedAddressDetail.geometry.location.lng})}>
+          onPress={() => navigation.navigate('Location', {selectedIndex: this.state.selectedIndex, address: this.state.selectedAddressData.description, latitude: this.state.selectedAddressDetail.geometry.location.lat, longitude: this.state.selectedAddressDetail.geometry.location.lng})}>
           SELECT
         </Button>
       </Block>
