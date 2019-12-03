@@ -16,7 +16,7 @@ class Location extends React.Component {
     fixedAddressName: 'Los Angeles, CA, USA',
     fixedAddressLatitude: 34.0522342,
     fixedAddressLongitude: -118.2436849,
-    mobileAddressData: {},
+    mobileAddressData: [{ index: 0}],
   };
   
   constructor(props) {
@@ -46,12 +46,12 @@ class Location extends React.Component {
       }
       // mobile method
       this.setState({
-        mobileAddressData: await AsyncStorage.getItem('mobileAddressData')
+        // mobileAddressData: await AsyncStorage.getItem('mobileAddressData')
       })
     }, 100)
   }
 
-  searchInputItems = [{ property: 0}];
+  
 
   setSelectedTab = (value) => {
     this.setState({ selectedTab: value })
@@ -60,11 +60,11 @@ class Location extends React.Component {
   addInputText = () => {
     var num = this.state.index;
     let newSearchInputItem = {
-      property: num,
+      index: num,
     }
     num++;
     this.setState({ index: num });
-    this.searchInputItems.push(newSearchInputItem);
+    this.state.mobileAddressData.push(newSearchInputItem);
 
   }
 
@@ -134,13 +134,13 @@ class Location extends React.Component {
    
     return (
       <ScrollView>
-        {this.searchInputItems.map((key) => {
+        {this.state.mobileAddressData.map((key) => {
           return (
             <Input
               right
               color="black"
               style={styles.search}
-              key={key.property}
+              key={key.index}
               placeholder="street address, city, state"
               onFocus={() => navigation.navigate('Search')}
             />
