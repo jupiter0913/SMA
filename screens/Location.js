@@ -16,7 +16,7 @@ class Location extends React.Component {
     fixedAddressName: 'Los Angeles, CA, USA',
     fixedAddressLatitude: 34.0522342,
     fixedAddressLongitude: -118.2436849,
-    mobileAddressData: {}
+    mobileAddressData: {},
   };
   
   constructor(props) {
@@ -147,30 +147,6 @@ class Location extends React.Component {
           );
         })}
       </ScrollView>
-    )
-  }
-
-  renderMobileSearch = () => {
-    const { navigation } = this.props;
-   
-    return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        placeholder="street address, city, state"
-        onFocus={() => navigation.navigate('Search')}
-      />
-    )
-  }
-
-  renderMobileContents = () => {
-    return (
-      <MapView style={styles.mapStyle}
-        provider='google'
-        mapType='satellite'
-      >
-      </MapView>
     )
   }
 
