@@ -21,7 +21,7 @@ export default class Search extends React.Component {
       viewMap: true,
       selectedAddressData: '',
       selectedAddressDetail: '',
-      selectedIndex: -1,
+      selectedIndex: this.props.navigation.getParam('selectedIndex'),
     };
   };
 

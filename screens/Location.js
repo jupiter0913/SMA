@@ -13,7 +13,6 @@ class Location extends React.Component {
   state = {
     selectedTab: 'fixed', // value is 'fixed' or 'mobile'.
     selectedIndex: -1,
-    index: 1, // index must be 1, because 'mobileAddressData' variable contains one element in initial.
     fixedAddressName: 'Los Angeles, CA, USA',
     fixedAddressLatitude: 34.0522342,
     fixedAddressLongitude: -118.2436849,
