@@ -12,6 +12,7 @@ const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818
 class Location extends React.Component {
   state = {
     selectedTab: 'fixed', // value is 'fixed' or 'mobile'.
+    selectedIndex: -1,
     index: 1, // index must be 1, because 'mobileAddressData' variable contains one element in initial.
     fixedAddressName: 'Los Angeles, CA, USA',
     fixedAddressLatitude: 34.0522342,
@@ -30,6 +31,9 @@ class Location extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    this.setState({
+      selectedIndex: nextProps.navigation.getParam('selectedIndex')
+    })
     if (nextProps.navigation.getParam('selectedIndex') == -1) {
       this.setState({
         fixedAddressName: nextProps.navigation.getParam('address'),
@@ -37,15 +41,15 @@ class Location extends React.Component {
         fixedAddressLongitude: nextProps.navigation.getParam('longitude'),
       })
     } else {
-      var index = nextProps.navigation.getParam('selectedIndex');
+      var selectedIndex = nextProps.navigation.getParam('selectedIndex');
       var address = nextProps.navigation.getParam('address');
       var latitude = nextProps.navigation.getParam('latitude');
       var longitude = nextProps.navigation.getParam('longitude');
       this.setState({
         mobileAddressData: [
-          ...this.state.mobileAddressData.slice(0, index),
-          Object.assign({}, this.state.mobileAddressData[index], { address: address, latitude: latitude, longitude: longitude }),
-          ...this.state.mobileAddressData.slice(index + 1)
+          ...this.state.mobileAddressData.slice(0, selectedIndex),
+          Object.assign({}, this.state.mobileAddressData[selectedIndex], { address: address, latitude: latitude, longitude: longitude }),
+          ...this.state.mobileAddressData.slice(selectedIndex + 1)
         ]
       })
     }
@@ -64,9 +68,17 @@ class Location extends React.Component {
         })
       }
       // mobile method
-      this.setState({
-        // mobileAddressData: await AsyncStorage.getItem('mobileAddressData')
-      })
+      const JSONString = await AsyncStorage.getItem('mobileAddressData');
+      if(JSONString != null) {
+        object = JSON.parse(JSONString);
+        array = Object.keys(object).map(function(k) {
+          return object[k];
+        });
+        
+        this.setState({
+          mobileAddressData: array
+        })
+      }
     }, 100)
   }
 
@@ -77,7 +89,7 @@ class Location extends React.Component {
   }
 
   addInputText = () => {
-    var num = this.state.index;
+    var num = this.state.mobileAddressData.length;
     let newSearchInputItem = {
       index: num,
       address: '',
@@ -90,10 +102,15 @@ class Location extends React.Component {
   }
 
   saveData = async () => {
-    await AsyncStorage.setItem('fixedAddressName', this.state.fixedAddressName);
-    await AsyncStorage.setItem('fixedAddressLatitude', JSON.stringify(this.state.fixedAddressLatitude));
-    await AsyncStorage.setItem('fixedAddressLongitude', JSON.stringify(this.state.fixedAddressLongitude));
-    alert("Your data has been saved successfully!");
+    if(this.state.selectedTab == 'fixed') {
+      AsyncStorage.setItem('fixedAddressName', this.state.fixedAddressName);
+      AsyncStorage.setItem('fixedAddressLatitude', JSON.stringify(this.state.fixedAddressLatitude));
+      AsyncStorage.setItem('fixedAddressLongitude', JSON.stringify(this.state.fixedAddressLongitude));
+      alert("Your fixed data has been saved successfully!");
+    } else {
+      AsyncStorage.setItem('mobileAddressData', JSON.stringify(this.state.mobileAddressData));
+      alert("Your mobile data has been saved successfully!");
+    }
   }
 
   renderTabs = () => {
@@ -123,7 +140,7 @@ class Location extends React.Component {
           color="black"
           style={styles.search}
           placeholder="street address, city, state"
-          onFocus={() => navigation.navigate('Search')}
+          onFocus={() => navigation.navigate('Search', { selectedIndex: -1 })}
           value={this.state.fixedAddressName}
         />
         <MapView
