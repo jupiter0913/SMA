@@ -1,11 +1,8 @@
 import React from 'react';
-import { AsyncStorage, TouchableOpacity, FlatList, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
-import { Block, Button, Text, theme, Input } from 'galio-framework';
+import { TouchableOpacity, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
+import { Block, Button, theme } from 'galio-framework';
 import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
-const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
 
 import Icon from '../components/Icon';
 import { materialTheme } from '../constants';
@@ -13,7 +10,6 @@ import { Key } from '../constants';
 
 const { height, width } = Dimensions.get('screen');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
-
 
 export default class Search extends React.Component {
   constructor(props) {
@@ -66,7 +62,6 @@ export default class Search extends React.Component {
           getDefaultValue={() => ''}
 
           query={{
-            // available options: https://developers.google.com/places/web-service/autocomplete
             key: Key.GoogleMapApiKey,
             language: 'en', // language of the results
             types: '(cities)' // default: 'geocode'
@@ -85,30 +80,22 @@ export default class Search extends React.Component {
             },
           }}
 
-          // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-          // currentLocationLabel="Current location"
           nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
           GoogleReverseGeocodingQuery={{
-            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
           }}
           GooglePlacesSearchQuery={{
-            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
             rankby: 'distance',
             type: 'cafe'
           }}
 
           GooglePlacesDetailsQuery={{
-            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
             fields: 'formatted_address',
           }}
 
           filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-          // predefinedPlaces={[homePlace, workPlace]}
           textInputProps={{ onFocus: () => this.setState({viewMap: false}) }}
 
           debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-          // renderLeftButton={() => <Icon size={16} name="arrow-long-left" family="Entypo" style={{ color: 'white' }} />}
-          // renderRightButton={() => <Text>Search</Text>}
         />
         {this.state.selectedAddressData && this.state.viewMap == true ?
           <MapView
@@ -165,7 +152,6 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   mapStyle: {
-    // marginTop: 10,
     marginBottom: 70,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height - 210,

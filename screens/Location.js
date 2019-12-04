@@ -6,8 +6,6 @@ import Header from '../components/Header';
 import { Icon } from '../components';
 
 const { width } = Dimensions.get('screen');
-const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
-const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
 
 class Location extends React.Component {
   state = {
@@ -23,7 +21,6 @@ class Location extends React.Component {
 
   constructor(props) {
     super(props);
-
   };
 
   componentWillReceiveProps(nextProps) {
