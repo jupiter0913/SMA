@@ -9,6 +9,7 @@ const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818
 
 import Icon from '../components/Icon';
 import { materialTheme } from '../constants';
+import { Key } from '../constants';
 
 const { height, width } = Dimensions.get('screen');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
@@ -66,7 +67,7 @@ export default class Search extends React.Component {
 
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
-            key: 'AIzaSyBIr-qC1OKhBK0SMELrKImcXNQjxXqHgZI',
+            key: Key.GoogleMapApiKey,
             language: 'en', // language of the results
             types: '(cities)' // default: 'geocode'
           }}
