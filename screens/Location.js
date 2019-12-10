@@ -6,73 +6,101 @@ import Header from '../components/Header';
 import { Icon } from '../components';
 
 const { width } = Dimensions.get('screen');
-const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
-const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
 
 class Location extends React.Component {
   state = {
     selectedTab: 'fixed', // value is 'fixed' or 'mobile'.
-    index: 1,
-    fixedAddressName: 'Los Angeles, CA, USA',
-    fixedAddressLatitude: 34.0522342,
-    fixedAddressLongitude: -118.2436849,
-    mobileAddressData: {}
+    fixedAddressData: [{ address: 'Los Angeles, CA, USA', latitude: '34.0522342', longitude: '-118.2436849', }],
+    mobileAddressData: [{
+      index: 0,
+      address: '',
+      latitude: '',
+      longitude: '',
+    }],
   };
-  
+
   constructor(props) {
     super(props);
-    
   };
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      fixedAddressName: nextProps.navigation.getParam('fixedAddressName'),
-      fixedAddressLatitude: nextProps.navigation.getParam('fixedAddressLatitude'),
-      fixedAddressLongitude: nextProps.navigation.getParam('fixedAddressLongitude'),
-    })
+    if (this.state.selectedTab == "fixed") {
+      var address = nextProps.navigation.getParam('address');
+      var latitude = nextProps.navigation.getParam('latitude');
+      var longitude = nextProps.navigation.getParam('longitude');
+      this.setState({
+        fixedAddressData: [{ address: address, latitude: latitude, longitude: longitude }]
+      })
+    } else {
+      var selectedIndex = nextProps.navigation.getParam('selectedIndex');
+      var address = nextProps.navigation.getParam('address');
+      var latitude = nextProps.navigation.getParam('latitude');
+      var longitude = nextProps.navigation.getParam('longitude');
+      this.setState({
+        mobileAddressData: [
+          ...this.state.mobileAddressData.slice(0, selectedIndex),
+          Object.assign({}, this.state.mobileAddressData[selectedIndex], { address: address, latitude: latitude, longitude: longitude }),
+          ...this.state.mobileAddressData.slice(selectedIndex + 1)
+        ]
+      })
+    }
     this.setState(nextProps);
   }
-  
+
   componentDidMount() {
     setTimeout(async () => {
       // fixed method
-      var fixedAddressName = await AsyncStorage.getItem('fixedAddressName');
-      if(fixedAddressName) {
+      var fixedString = await AsyncStorage.getItem('fixedAddressData');
+      if (fixedString != null) {
+        object = JSON.parse(fixedString);
+        array = Object.keys(object).map(function (k) {
+          return object[k];
+        });
         this.setState({
-          fixedAddressName: await AsyncStorage.getItem('fixedAddressName'),
-          fixedAddressLatitude: await AsyncStorage.getItem('fixedAddressLatitude'),
-          fixedAddressLongitude: await AsyncStorage.getItem('fixedAddressLongitude'),
+          fixedAddressData: array
         })
       }
       // mobile method
-      this.setState({
-        mobileAddressData: await AsyncStorage.getItem('mobileAddressData')
-      })
+      var mobileString = await AsyncStorage.getItem('mobileAddressData');
+      if (mobileString != null) {
+        object = JSON.parse(mobileString);
+        array = Object.keys(object).map(function (k) {
+          return object[k];
+        });
+
+        this.setState({
+          mobileAddressData: array
+        })
+      }
     }, 100)
   }
-
-  searchInputItems = [{ property: 0}];
 
   setSelectedTab = (value) => {
     this.setState({ selectedTab: value })
   }
 
   addInputText = () => {
-    var num = this.state.index;
+    var num = this.state.mobileAddressData.length;
     let newSearchInputItem = {
-      property: num,
+      index: num,
+      address: '',
+      latitude: '',
+      longitude: '',
     }
     num++;
     this.setState({ index: num });
-    this.searchInputItems.push(newSearchInputItem);
+    this.state.mobileAddressData.push(newSearchInputItem);
 
   }
 
   saveData = async () => {
-    await AsyncStorage.setItem('fixedAddressName', this.state.fixedAddressName);
-    await AsyncStorage.setItem('fixedAddressLatitude', JSON.stringify(this.state.fixedAddressLatitude));
-    await AsyncStorage.setItem('fixedAddressLongitude', JSON.stringify(this.state.fixedAddressLongitude));
-    alert("Your data has saved successfully!");
+    if (this.state.selectedTab == 'fixed') {
+      AsyncStorage.setItem('fixedAddressData', JSON.stringify(this.state.fixedAddressData));
+      alert("Your fixed data has been saved successfully!");
+    } else {
+      AsyncStorage.setItem('mobileAddressData', JSON.stringify(this.state.mobileAddressData));
+      alert("Your mobile data has been saved successfully!");
+    }
   }
 
   renderTabs = () => {
@@ -102,8 +130,8 @@ class Location extends React.Component {
           color="black"
           style={styles.search}
           placeholder="street address, city, state"
-          onFocus={() => navigation.navigate('Search')}
-          value={this.state.fixedAddressName}
+          onFocus={() => navigation.navigate('Search', { selectedIndex: -1 })}
+          value={this.state.fixedAddressData[0].address}
         />
         <MapView
           style={styles.mapStyle}
@@ -112,17 +140,16 @@ class Location extends React.Component {
           zoomControlEnabled={true}
           mapType='satellite'
           region={{
-            latitude: parseFloat(this.state.fixedAddressLatitude),
-            longitude: parseFloat(this.state.fixedAddressLongitude),
+            latitude: parseFloat(this.state.fixedAddressData[0].latitude),
+            longitude: parseFloat(this.state.fixedAddressData[0].longitude),
             latitudeDelta: 0,
             longitudeDelta: 0,
           }}
         >
-
           <Marker
-            coordinate={{ latitude: parseFloat(this.state.fixedAddressLatitude), longitude: parseFloat(this.state.fixedAddressLongitude) }}
-            title={this.state.fixedAddressName}
-            description={this.state.fixedAddressName}
+            coordinate={{ latitude: parseFloat(this.state.fixedAddressData[0].latitude), longitude: parseFloat(this.state.fixedAddressData[0].longitude) }}
+            title={this.state.fixedAddressData[0].address}
+            description={this.state.fixedAddressData[0].address}
           />
         </MapView>
       </Block>
@@ -131,46 +158,23 @@ class Location extends React.Component {
 
   renderMobile = () => {
     const { navigation } = this.props;
-   
+
     return (
       <ScrollView>
-        {this.searchInputItems.map((key) => {
+        {this.state.mobileAddressData.map((key) => {
           return (
             <Input
               right
               color="black"
               style={styles.search}
-              key={key.property}
+              key={key.index}
               placeholder="street address, city, state"
-              onFocus={() => navigation.navigate('Search')}
+              onFocus={() => navigation.navigate('Search', { selectedIndex: key.index })}
+              value={this.state.mobileAddressData[key.index].address}
             />
           );
         })}
       </ScrollView>
-    )
-  }
-
-  renderMobileSearch = () => {
-    const { navigation } = this.props;
-   
-    return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        placeholder="street address, city, state"
-        onFocus={() => navigation.navigate('Search')}
-      />
-    )
-  }
-
-  renderMobileContents = () => {
-    return (
-      <MapView style={styles.mapStyle}
-        provider='google'
-        mapType='satellite'
-      >
-      </MapView>
     )
   }
 
@@ -194,10 +198,8 @@ class Location extends React.Component {
             <Icon size={50} name="plus" family="AntDesign" style={{ color: 'white' }} />
           </TouchableOpacity>
         }
-
         {this.renderSave()}
       </Block>
-
     );
   }
 }
